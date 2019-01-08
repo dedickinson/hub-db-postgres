@@ -1,0 +1,15 @@
+[Unit]
+Description=Postgres Database Server
+After=docker.service
+Requires=docker.service
+
+[Service]
+Restart=always
+ExecStartPre=/bin/bash -c '/usr/bin/docker rm -f postgres || /bin/true'
+# TODO: Re-enable when central repo is ready
+# ExecStartPre=/usr/bin/docker pull hub-db-postgres
+ExecStart=/usr/bin/docker run --volume postgres-data:/var/lib/postgresql/data -p 5432:5432 --name postgres hub-db-postgres
+ExecStop=/usr/bin/docker rm -f postgres
+
+[Install]
+WantedBy=multi-user.target
